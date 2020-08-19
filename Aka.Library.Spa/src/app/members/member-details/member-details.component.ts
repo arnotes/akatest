@@ -8,7 +8,7 @@ import { Member } from '../interfaces/member';
 import { switchMap, tap, map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { MemberBook } from '../interfaces/member-book';
-import { SignedOutBook } from '@shared/signed-out-book';
+import { SignedOutBook } from '../../shared/signed-out-book';
 
 @Component({
   selector: 'app-member-details',
