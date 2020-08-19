@@ -2,12 +2,13 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { MemberService } from './../../services/member.service';
 import { slideInDownAnimation } from './../../animations';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, pipe } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Member } from '../interfaces/member';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { MemberBook } from '../interfaces/member-book';
+import { SignedOutBook } from '@shared/signed-out-book';
 
 @Component({
   selector: 'app-member-details',
@@ -32,6 +33,7 @@ export class MemberDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private memberService: MemberService,
     private service: MemberService,
     private auth: AuthService) {
     this.createForm();
@@ -45,6 +47,26 @@ export class MemberDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    const pipeAsMemberBook = pipe(//ill move this to a different file later
+      map((x:SignedOutBook[]) => {
+        return x.map<MemberBook>(book => ({
+          bookId: book.bookId,
+          libraryId: book.libraryId,
+          memberId: book.memberId,
+          whenReturned: new Date(book.whenReturned),
+          whenSignedOut: new Date(book.whenSignedOut)
+        }));
+      })
+    )
+
+    this.signedout$ = this.memberService
+        .getSignedOutBooks(this.auth.currentMember)
+        .pipe(pipeAsMemberBook);
+
+    this.bookhistory$ = this.memberService
+        .getMemberBookHistory(this.auth.currentMember)
+        .pipe(pipeAsMemberBook);
+
     this.member$ = this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) =>

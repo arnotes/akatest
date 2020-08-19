@@ -4,7 +4,8 @@ import { CheckedOutBooksComponent } from './checked-out-books/checked-out-books.
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
-  { path: 'list', component: CheckedOutBooksComponent }
+  { path: 'list', component: CheckedOutBooksComponent },
+  { path: 'history', component: CheckedOutBooksComponent }
 ];
 
 @NgModule({

@@ -46,8 +46,12 @@ export class CheckedOutBooksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.memberService.getSignedOutBooks(this.authService.currentMember)
-      .pipe(
+    let obsSignedOutBooks = this.memberService.getSignedOutBooks(this.authService.currentMember);
+    if(this.route.snapshot.url.some(x => x.path == 'history')){
+      obsSignedOutBooks = this.memberService.getMemberBookHistory(this.authService.currentMember);
+    }
+
+    obsSignedOutBooks.pipe(
         map((signedOutBooks: SignedOutBook []) => {
           const obss = signedOutBooks.map(signedOutBook => forkJoin([
             this.libraryService.getLibrary(signedOutBook.libraryId),
