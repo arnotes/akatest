@@ -69,8 +69,10 @@ export class BooksService {
    * @memberof BooksService
    */
   getNumberOfAvailableBookCopies(libraryId: number, bookId: number): Observable<number> {
-    // TODO: Add implementation
-    return throwError('Not Implemented');
+    const url = `${this.apiUrl}${libraryId}/books/available`;
+    return this.http.get<Book[]>(url).pipe(
+      map(books => books.filter(x => x.bookId == bookId).length)
+    );
   }
 
   checkOutBook(libraryId: number, bookId: number, memberId: number): Observable<SignedOutBook> {
