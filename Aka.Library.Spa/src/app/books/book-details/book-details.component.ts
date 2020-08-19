@@ -53,7 +53,7 @@ export class BookDetailsComponent implements OnInit {
    */
   isMaximumNumberOfBooksSignedOut(): boolean {
     // TODO: Implement check
-    return false;
+    return this.numOfThisBookSignedOutByUser >= 2;
   }
 
   checkOutBook() {
@@ -101,7 +101,6 @@ export class BookDetailsComponent implements OnInit {
         this.numBooksAvailable = numberOfAvailableCopies;
         this.numOfThisBookSignedOutByUser = filter(signedOutBooks, (signedOutBook) => signedOutBook.bookId === book.bookId).length;
         const isbn = book.isbn;
-        this.book = book;
         this.books.getBookMetaData(isbn)
           .pipe(take(1))
           .subscribe((bookMetadata: GoogleBooksMetadata) => {
@@ -116,7 +115,9 @@ export class BookDetailsComponent implements OnInit {
       catchError(err => {
         return throwError(err);
       })
-    ).subscribe();
+    ).subscribe(x => {
+      this.book = x;
+    });
   }
 
 }

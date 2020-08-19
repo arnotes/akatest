@@ -97,8 +97,7 @@ export class BooksService {
     // TODO: Add implementation
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${this.googleBooksAPIKey}`;
 
-    // return this.http.get(url);
-    return throwError('Funtion not implemented');
+    return this.http.get<GoogleBooksMetadata>(url);
 
   }
 
