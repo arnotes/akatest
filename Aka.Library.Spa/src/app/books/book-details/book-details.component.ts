@@ -53,7 +53,7 @@ export class BookDetailsComponent implements OnInit {
    */
   isMaximumNumberOfBooksSignedOut(): boolean {
     // TODO: Implement check
-    return this.numOfThisBookSignedOutByUser >= 2;
+    return this.numBooksSignedOut >= 2;
   }
 
   checkOutBook() {
